@@ -1,0 +1,56 @@
+{
+  "root": true,
+  "plugins": [
+    "import",
+    "react",
+    "react-native",
+    "react-hooks",
+    "prettier"
+  ],
+  "extends": [
+    "@react-native-community",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true,
+      "classes": true
+    },
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "rules": {
+    "react/prop-types": 0,
+    "no-unused-vars": 1,
+    "react-native/no-unused-styles": 2,
+    "react-native/split-platform-components": 2,
+    "react-native/no-inline-styles": 2,
+    "react-native/no-color-literals": 0,
+    "react-native/no-raw-text": 2,
+    "react-native/sort-styles": 0,
+    "react/display-name": 0
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["src"],
+        "alias": {
+          "_assets": "./src/assets",
+          "_components": "./src/components",
+          "_atoms": "./src/components/atoms",
+          "_molecules": "./src/components/molecules",
+          "_organisms": "./src/components/organisms",
+          "_navigations": "./src/navigations",
+          "_scenes": "./src/scenes",
+          "_store": "./src/store",
+          "_services": "./src/services",
+          "_styles": "./src/styles",
+          "_utils": "./src/utils"
+        }
+      }
+    }
+  }
+}

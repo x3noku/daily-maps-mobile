@@ -24,7 +24,7 @@ DerivedData
 # Android/IntelliJ
 #
 android/build/
-.idea
+/.idea
 android/.idea
 .gradle
 android/.gradle
@@ -67,3 +67,6 @@ buck-out/
 .env.prod
 .env.dev
 .env.production
+/.idea/
+/.idea/
+.idea
