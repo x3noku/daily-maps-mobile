@@ -23,7 +23,6 @@ DerivedData
 
 # Android/IntelliJ
 #
-build/
 android/build/
 .idea
 android/.idea
@@ -64,7 +63,7 @@ buck-out/
 # CocoaPods
 /ios/Pods/
 
-# .env
-.env
-.env.development
+# .env.prod
+.env.prod
+.env.dev
 .env.production

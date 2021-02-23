@@ -18,4 +18,42 @@ For Android:
 For iOS:
 **will be added later**
 
+## Set Up Project Environment
+
+### For Android:
+
+### For IOS: **will be added later**
+
+#### Run development build:
+Yarn
+```console
+$ yarn ios-dev     
+```
+npm
+```console
+$ npm run ios-dev     
+```
+#### Run production build:
+Yarn
+```console
+$ yarn ios-prod    
+```
+npm
+```console
+$ npm run ios-prod   
+```
+
+---
+**NOTE**
+
+Also ensure that you have .env.dev and .env.prod in your root directory of your project
+
+---
+
+
+
+
+
+
+
 Enable prettier _([WebStorm Instructions](https://prettier.io/docs/en/webstorm.html))_
