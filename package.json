@@ -1,17 +1,24 @@
-{
+ {
   "name": "daily_maps_mobile",
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
+    "android-prod-bash": "ENVFILE=.env.prod react-native run-android",
+    "android-prod-windows": "SET ENVFILE=.env.prod && react-native run-android",
+    "android-prod-powershell": "env:ENVFILE=\".env.prod\"; react-native run-android",
+    "android-dev-bash": "ENVFILE=.env.dev react-native run-android",
+    "android-dev-windows": "SET ENVFILE=.env.dev && react-native run-android",
+    "android-dev-powershell": "env:ENVFILE=\".env.dev\"; react-native run-android",
+    "ios-prod": "ENVFILE=.env.prod react-native run-ios",
+    "ios-dev": "ENVFILE=.env.dev react-native run-ios",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
     "react": "16.13.1",
-    "react-native": "0.63.4"
+    "react-native": "0.63.4",
+    "react-native-config": "^1.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
