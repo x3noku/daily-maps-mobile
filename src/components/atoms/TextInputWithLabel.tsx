@@ -1,63 +1,61 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, StyleSheet, TextInput, View } from 'react-native';
 import { COLOR_TEXT_PRIMARY, COLOR_TEXT_SECONDARY } from '../../styles/colors';
-import { SIZE_TEXT_PRIMARY } from '../../styles/sizes';
-import Label, { LabelType } from './Label';
+import { SIZE_TEXT_HINT, SIZE_TEXT_PRIMARY, SIZE_TEXT_SECONDARY } from '../../styles/sizes';
+import { ANIMATION_DURATION_VERY_SHORT } from '../../styles/animations';
 
-export type IFloatingLabelInput = {
+export interface ITextInputWithLabelProp {
     placeholder?: string;
     onChangeText?: (text: string) => void;
     secureTextEntry?: boolean;
+    blurOnSubmit?: boolean;
     containerStyle?: any;
-};
+}
 
-const TextInputWithLabel: React.FC<IFloatingLabelInput> = props => {
-    const { placeholder, onChangeText, secureTextEntry, containerStyle } = props;
+const TextInputWithLabel: React.FC<ITextInputWithLabelProp> = props => {
+    const { placeholder, onChangeText, secureTextEntry, blurOnSubmit, containerStyle } = props;
 
     const [isFocused, setIsFocused] = useState(false);
     const [text, setText] = useState('');
-    const [labelWidth, setLabelWidth] = useState(0);
     const labelDeviation = useRef(new Animated.Value(text === '' ? 0 : 1)).current;
 
     useEffect(() => {
         Animated.timing(labelDeviation, {
             useNativeDriver: false,
             toValue: isFocused || text !== '' ? 1 : 0,
-            duration: 200,
+            duration: ANIMATION_DURATION_VERY_SHORT,
         }).start();
     }, [isFocused, text]);
 
     return (
-        <View style={[styles.textInput__container, containerStyle, { minWidth: labelWidth }]}>
-            <Animated.View
+        <View style={[styles.textInput__container, containerStyle]}>
+            <Animated.Text
                 style={[
-                    styles.textInput__labelWrapper,
+                    styles.textInput__label,
                     {
                         marginTop: labelDeviation.interpolate({
                             inputRange: [0, 1],
                             outputRange: [styles.textInput__input.fontSize, -styles.textInput__input.paddingBottom],
                         }),
+                        fontSize: labelDeviation.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [SIZE_TEXT_SECONDARY, SIZE_TEXT_HINT],
+                        }),
                     },
                 ]}
-                onLayout={event => setLabelWidth(event.nativeEvent.layout.width)}
             >
-                <Label
-                    type={LabelType.Small}
-                    text={placeholder}
-                    textStyle={styles.textInput__label}
-                    containerStyle={styles.textInput__label}
-                />
-            </Animated.View>
+                {placeholder}
+            </Animated.Text>
             <TextInput
                 style={styles.textInput__input}
-                secureTextEntry={secureTextEntry}
                 onChangeText={value => {
                     setText(value);
                     onChangeText?.(value);
                 }}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
-                blurOnSubmit
+                secureTextEntry={secureTextEntry}
+                blurOnSubmit={blurOnSubmit !== undefined ? blurOnSubmit : true}
             />
         </View>
     );
@@ -67,13 +65,12 @@ const styles = StyleSheet.create({
     textInput__container: {
         width: 128,
     },
-    textInput__labelWrapper: {
-        position: 'absolute',
-        marginLeft: 0,
-    },
     textInput__label: {
+        position: 'absolute',
         color: COLOR_TEXT_SECONDARY,
         paddingStart: 0,
+        paddingTop: 2,
+        paddingBottom: 2,
     },
     textInput__input: {
         paddingStart: 0,

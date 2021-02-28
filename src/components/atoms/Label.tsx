@@ -30,7 +30,6 @@ const Label: React.FC<ILabelProp> = props => {
     const { text, type, textStyle, containerStyle } = props;
 
     const typedStyle: any[] = [];
-
     const types = type instanceof Array ? type : [type];
     types.forEach(it => {
         switch (it) {
