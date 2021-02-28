@@ -1,4 +1,4 @@
-export const ripple = (color: string) => {
+export const ripple = (color: string): string => {
     // @ts-ignore
     const [r, g, b] = color
         .replace('#', '')

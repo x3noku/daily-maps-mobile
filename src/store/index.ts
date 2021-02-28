@@ -10,4 +10,10 @@ const store = configureStore({
 export default store;
 
 export type RootState = ReturnType<typeof rootReducer>;
+
+/**
+ * @usage use it when you use useDispatch like that:
+ * const dispatch: AppDispatch = useDispatch()
+ */
 export type AppDispatch = typeof store.dispatch;
+
