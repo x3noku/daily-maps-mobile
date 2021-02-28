@@ -18,7 +18,7 @@ import TextInputWithLabel from '../components/atoms/TextInputWithLabel';
 import { SIZE_TEXT_TITLE } from '../styles/sizes';
 import { ANIMATION_DURATION_SHORT } from '../styles/animations';
 
-const RegisterScreen = () => {
+const SignUpScreen = () => {
     const keyboardOpened = useRef(new Animated.Value(0)).current;
 
     const keyboardDidShowListener = () => {
@@ -195,4 +195,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default RegisterScreen;
+export default SignUpScreen;
