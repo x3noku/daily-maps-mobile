@@ -4,7 +4,9 @@ import { WHITE, BLUE_PRIMARY, BLUE_SECONDARY } from '../../styles/colors';
 import { SIZE_TEXT_PRIMARY } from '../../styles/sizes';
 import { ripple } from '../../utils';
 
-export type IButtonProp = {
+//TODO: FIX THE MARGINS
+
+export interface IButtonProp {
     text?: string;
     type: ButtonType;
     onPress?: (event: Event) => void;
@@ -13,7 +15,7 @@ export type IButtonProp = {
     onPressOut?: (event: Event) => void;
     textStyle?: any;
     containerStyle?: any;
-};
+}
 
 export enum ButtonType {
     Contained,
@@ -85,9 +87,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     button__container: {
-        paddingLeft: 48,
+        paddingLeft: 32,
         paddingTop: 12,
-        paddingRight: 48,
+        paddingRight: 32,
         paddingBottom: 12,
         justifyContent: 'center',
 
