@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Card from '../components/atoms/Card';
 import Label, { LabelType } from '../components/atoms/Label';
-import { COLOR_TEXT_SECONDARY, WHITE } from '../styles/colors';
+import { COLOR_TEXT_SECONDARY, COLOR_WHITE } from '../styles/colors';
 import Button, { ButtonType } from '../components/atoms/Button';
 import PressableLabel from '../components/atoms/PressableLabel';
 import Space, { SpaceType } from '../components/atoms/Space';
@@ -19,7 +19,7 @@ import TextInputWithLabel from '../components/atoms/TextInputWithLabel';
 import { SIZE_TEXT_TITLE } from '../styles/sizes';
 import { ANIMATION_DURATION_SHORT } from '../styles/animations';
 
-const LoginScreen = () => {
+const SignInScreen = () => {
     const keyboardOpened = useRef(new Animated.Value(0)).current;
 
     const keyboardDidShowListener = () => {
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
         marginStart: '1%',
     },
     screen__contentTitle_style_text: {
-        color: WHITE,
+        color: COLOR_WHITE,
     },
     screen__contentBody: {
         minHeight: '65%',
@@ -185,4 +185,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default LoginScreen;
+export default SignInScreen;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { WHITE } from '../../styles/colors';
+import { COLOR_WHITE } from '../../styles/colors';
 
 export interface ICardProp {
     style?: any;
@@ -14,7 +14,7 @@ const Card: React.FC<ICardProp> = props => {
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: WHITE,
+        backgroundColor: COLOR_WHITE,
         width: '100%',
         height: '100%',
         borderRadius: 48,
