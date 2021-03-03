@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, View, Text, StyleSheet } from 'react-native';
-import { WHITE, BLUE_PRIMARY, BLUE_SECONDARY } from '../../styles/colors';
+import { COLOR_WHITE, COLOR_BLUE_PRIMARY, COLOR_BLUE_SECONDARY } from '../../styles/colors';
 import { SIZE_TEXT_PRIMARY } from '../../styles/sizes';
 import { ripple } from '../../utils';
 
@@ -47,7 +47,7 @@ const Button: React.FC<IButtonProp> = props => {
             break;
         case ButtonType.Text:
             typedStyle = styles.button__container_type_text;
-            rippleColor = ripple(textStyle?.color !== undefined ? textStyle.color : BLUE_SECONDARY);
+            rippleColor = ripple(textStyle?.color !== undefined ? textStyle.color : COLOR_BLUE_SECONDARY);
             break;
     }
 
@@ -69,7 +69,7 @@ const Button: React.FC<IButtonProp> = props => {
                 <Text
                     style={[
                         styles.button__text,
-                        { color: type === ButtonType.Contained ? WHITE : BLUE_SECONDARY },
+                        { color: type === ButtonType.Contained ? COLOR_WHITE : COLOR_BLUE_SECONDARY },
                         textStyle,
                     ]}
                 >
@@ -93,8 +93,8 @@ const styles = StyleSheet.create({
         paddingBottom: 12,
         justifyContent: 'center',
 
-        backgroundColor: BLUE_PRIMARY,
-        borderColor: BLUE_SECONDARY,
+        backgroundColor: COLOR_BLUE_PRIMARY,
+        borderColor: COLOR_BLUE_SECONDARY,
         borderWidth: 2,
     },
     button__text: {

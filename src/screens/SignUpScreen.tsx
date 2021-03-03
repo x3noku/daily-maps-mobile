@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Card from '../components/atoms/Card';
 import Label, { LabelType } from '../components/atoms/Label';
-import { COLOR_TEXT_ACCENT, COLOR_TEXT_SECONDARY, WHITE } from '../styles/colors';
+import { COLOR_TEXT_ACCENT, COLOR_TEXT_SECONDARY, COLOR_WHITE } from '../styles/colors';
 import Button, { ButtonType } from '../components/atoms/Button';
 import PressableLabel from '../components/atoms/PressableLabel';
 import TextInputWithLabel from '../components/atoms/TextInputWithLabel';
@@ -127,6 +127,8 @@ const SignUpScreen = () => {
 const styles = StyleSheet.create({
     screen__container: {
         flex: 1,
+        width: '100%',
+        height: '100%',
     },
     screen__cover: {
         position: 'absolute',
@@ -147,7 +149,7 @@ const styles = StyleSheet.create({
         marginStart: '1%',
     },
     screen__contentTitle_style_text: {
-        color: WHITE,
+        color: COLOR_WHITE,
     },
     screen__contentBody: {
         minHeight: '65%',
