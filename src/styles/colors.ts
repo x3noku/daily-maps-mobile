@@ -7,3 +7,4 @@ export const COLOR_BLUE_ACCENT = '#0070FF';
 export const COLOR_TEXT_PRIMARY = '#3E4855';
 export const COLOR_TEXT_SECONDARY = '#8c8c8c';
 export const COLOR_TEXT_ACCENT = '#E562EE';
+
