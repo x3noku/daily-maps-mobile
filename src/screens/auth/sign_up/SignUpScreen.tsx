@@ -1,25 +1,24 @@
 import React, { useEffect, useRef } from 'react';
 import {
     Animated,
+    Dimensions,
     Image,
     Keyboard,
     KeyboardAvoidingView,
     StyleSheet,
     TouchableWithoutFeedback,
     View,
-    Dimensions,
 } from 'react-native';
-import Card from '../components/atoms/Card';
-import Label, { LabelType } from '../components/atoms/Label';
-import { COLOR_TEXT_SECONDARY, COLOR_WHITE } from '../styles/colors';
-import Button, { ButtonType } from '../components/atoms/Button';
-import PressableLabel from '../components/atoms/PressableLabel';
-import Space, { SpaceType } from '../components/atoms/Space';
-import TextInputWithLabel from '../components/atoms/TextInputWithLabel';
-import { SIZE_TEXT_TITLE } from '../styles/sizes';
-import { ANIMATION_DURATION_SHORT } from '../styles/animations';
+import Card from '../../../components/atoms/Card';
+import Label, { LabelType } from '../../../components/atoms/Label';
+import { COLOR_TEXT_ACCENT, COLOR_TEXT_SECONDARY, COLOR_WHITE } from '../../../styles/colors';
+import Button, { ButtonType } from '../../../components/atoms/Button';
+import PressableLabel from '../../../components/atoms/PressableLabel';
+import TextInputWithLabel from '../../../components/atoms/TextInputWithLabel';
+import { SIZE_TEXT_TITLE } from '../../../styles/sizes';
+import { ANIMATION_DURATION_SHORT } from '../../../styles/animations';
 
-const SignInScreen = () => {
+const SignUpScreen = () => {
     const keyboardOpened = useRef(new Animated.Value(0)).current;
 
     const keyboardDidShowListener = () => {
@@ -49,7 +48,7 @@ const SignInScreen = () => {
 
     return (
         <View style={styles.screen__container}>
-            <Image source={require('../assets/images/AuthCoverBackground.png')} style={styles.screen__cover} />
+            <Image source={require('../../../assets/images/AuthCoverBackground.png')} style={styles.screen__cover} />
             <KeyboardAvoidingView style={styles.screen__contentWrapper}>
                 <TouchableWithoutFeedback style={styles.screen__contentWrapper} onPress={Keyboard.dismiss}>
                     <View style={styles.screen__content}>
@@ -77,16 +76,20 @@ const SignInScreen = () => {
                         <Card style={styles.screen__contentBody}>
                             <Label
                                 type={[LabelType.Large, LabelType.Bold]}
-                                text='Вход'
+                                text='Регистрация'
                                 containerStyle={[styles.screen__contentBodyTitle, styles.screen__contentBodyElement]}
                             />
                             <View style={[styles.screen__contentBodyCredentials, styles.screen__contentBodyElement]}>
                                 <TextInputWithLabel
-                                    placeholder='Email/Phone number'
+                                    placeholder='Login'
                                     containerStyle={styles.screen__contentBodyCredentialsElement}
                                 />
                                 <TextInputWithLabel
-                                    placeholder='Login'
+                                    placeholder='Phone number'
+                                    containerStyle={styles.screen__contentBodyCredentialsElement}
+                                />
+                                <TextInputWithLabel
+                                    placeholder='Email'
                                     containerStyle={styles.screen__contentBodyCredentialsElement}
                                 />
                                 <TextInputWithLabel
@@ -94,25 +97,25 @@ const SignInScreen = () => {
                                     containerStyle={styles.screen__contentBodyCredentialsElement}
                                 />
                             </View>
-                            <View style={styles.screen__contentBodyElement}>
-                                <Button
-                                    type={ButtonType.Contained}
-                                    text='Войти'
-                                    containerStyle={styles.screen__contentBodyButton}
+                            <Button
+                                type={ButtonType.Contained}
+                                text='Войти'
+                                containerStyle={styles.screen__contentBodyButton}
+                            />
+                            <View style={[styles.screen__contentBodyLogin, styles.screen__contentBodyElement]}>
+                                <Label
+                                    type={[LabelType.Small]}
+                                    text='Уже есть аккаунт?'
+                                    textStyle={styles.screen__contentBodyLoginPrimary}
+                                    containerStyle={styles.screen__contentBodyLoginPrimary}
                                 />
-                                <Space type={SpaceType.XXLittle} />
                                 <PressableLabel
-                                    type={[LabelType.Small, LabelType.Underlined]}
-                                    text='Забыли пароль?'
-                                    textStyle={styles.screen__contentBodyForgotPassword}
+                                    type={[LabelType.Small]}
+                                    text='Войти'
+                                    textStyle={styles.screen__contentBodyLoginAccent}
                                     rippleActive
                                 />
                             </View>
-                            <Button
-                                type={ButtonType.Outlined}
-                                text='Создать аккаунт'
-                                containerStyle={[styles.screen__contentBodyButton]}
-                            />
                         </Card>
                     </View>
                 </TouchableWithoutFeedback>
@@ -124,6 +127,8 @@ const SignInScreen = () => {
 const styles = StyleSheet.create({
     screen__container: {
         flex: 1,
+        width: '100%',
+        height: '100%',
     },
     screen__cover: {
         position: 'absolute',
@@ -154,7 +159,7 @@ const styles = StyleSheet.create({
         paddingStart: 24,
         paddingTop: 36,
         paddingEnd: 24,
-        paddingBottom: 24,
+        paddingBottom: 36,
         borderBottomStartRadius: 0,
         borderBottomEndRadius: 0,
     },
@@ -171,8 +176,15 @@ const styles = StyleSheet.create({
         marginBottom: 4,
         width: '100%',
     },
-    screen__contentBodyForgotPassword: {
+    screen__contentBodyLogin: {
+        flexDirection: 'row',
+    },
+    screen__contentBodyLoginPrimary: {
         color: COLOR_TEXT_SECONDARY,
+        paddingRight: 0,
+    },
+    screen__contentBodyLoginAccent: {
+        color: COLOR_TEXT_ACCENT,
     },
     screen__contentBodyButton: {
         width: '70%',
@@ -185,4 +197,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default SignInScreen;
+export default SignUpScreen;

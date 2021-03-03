@@ -1,13 +1,13 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Provider } from 'react-redux';
+import store from './store';
+import AppNavigator from './navigation/AppNavigator';
 
 const App = () => {
     return (
-        <>
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text>Daily Maps Mobile</Text>
-            </View>
-        </>
+        <Provider store={store}>
+            <AppNavigator/>
+        </Provider>
     );
 };
 
