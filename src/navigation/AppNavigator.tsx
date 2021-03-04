@@ -13,8 +13,6 @@ const AppNavigator = () => {
             <Stack.Navigator initialRouteName={Screens.stacks.main} screenOptions={{headerShown: false}}>
                 <Stack.Screen name={Screens.stacks.auth} component={AuthStack} />
                 <Stack.Screen name={Screens.stacks.main} component={MainStack} />
-            <Stack.Navigator initialRouteName={Screens.stacks.auth} screenOptions={{headerShown: false}}>
-                <Stack.Screen name={Screens.stacks.auth} component={AuthStack} options={{ headerShown: false }}/>
             </Stack.Navigator>
         </NavigationContainer>
     );
