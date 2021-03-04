@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     element__container: {
         marginStart: 24,
         marginEnd: 24,
-        width: '75%',
+        maxWidth: '75%',
         height: 'auto',
         borderRadius: 16,
         padding: 8,

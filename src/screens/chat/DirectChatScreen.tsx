@@ -1,16 +1,11 @@
-import React, { useState } from 'react';
-import { FlatList, Image, StyleSheet, View, Text, TextInput } from 'react-native';
-import { UserInfo } from './ChatListScreen';
-import Card from '../components/atoms/Card';
-import { COLOR_BLUE_PRIMARY, COLOR_GRAY, COLOR_TEXT_SECONDARY, COLOR_WHITE } from '../styles/colors';
-import Label, { LabelType } from '../components/atoms/Label';
-import { SIZE_TEXT_PRIMARY } from '../styles/sizes';
-import ChatMessageElement from '../components/molecules/ChatMessageElement';
-import Space, { SpaceType } from '../components/atoms/Space';
-
-export interface IDirectScreenChatProp {
-    userInfo: UserInfo;
-}
+import React, { useEffect, useState } from 'react';
+import { FlatList, Image, StyleSheet, View, TextInput } from 'react-native';
+import Card from '../../components/atoms/Card';
+import { COLOR_BLUE_PRIMARY, COLOR_GRAY, COLOR_TEXT_SECONDARY, COLOR_WHITE } from '../../styles/colors';
+import Label, { LabelType } from '../../components/atoms/Label';
+import { SIZE_TEXT_PRIMARY } from '../../styles/sizes';
+import ChatMessageElement from '../../components/molecules/ChatMessageElement';
+import Space, { SpaceType } from '../../components/atoms/Space';
 
 type Message = {
     text: string;
@@ -18,44 +13,58 @@ type Message = {
     time: string;
 };
 
-const messages: Array<Message> = [
+const testMessages: Array<Message> = [
     {
-        text: 'Vivamus finibus sollicitudin lorem eu hendrerit. Suspendisse luctus ornare aliquet.',
+        text:
+            'Делаю shot как Лэмпард, взял победу как Бэкхем (Victoria)\n' +
+            'Ты-ты улетаешь как Хэнкок, первый раз попав в Bando (В bando)\n' +
+            'Пиздите как моя ex-hoe, кепки на вас будто Kangol (Фу-у, lean, lean)\n' +
+            'На-на-набили слухами backpack, вам доносится эхо (Алло?)\n',
         owned: true,
-        time: '10:45 AM',
+        time: '9:35 AM',
+    },
+    {
+        text: 'Алло-алло, сука, ты с улиц как Элмо, а (Ты красный)',
+        owned: true,
+        time: '9:35 AM',
     },
     {
         text:
-            'Proin aliquam nisi eget lorem varius ornare. Nam sed neque ut est consequat eleifend. Proin scelerisque tempor eleifend. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur sed arcu a nunc dignissim pretium eget a est. Maecenas non dignissim sem. Duis congue magna magna, sed bibendum eros vehicula vel.',
+            'Я с улиц Иркутска — поверь мне, тут тебя кинут на деньги, ха (Вэй-вэй-вэй)\n' +
+            'Порежут-порежут на семплы, не смейся, ты не на stand up, а (Чу-у, а-ха)',
+        owned: false,
+        time: '10:35 AM',
+    },
+    {
+        text:
+            'А-а-алло-алло, покури ствол extendo, а (Алло-алло)\n' +
+            'Куш пуш— Куш пушистый как gizmo, а (Gizmo)\n' +
+            'Дел-дел-делаю пресс, как фитнесс, я пропал, будто призрак (Ghosty)\n' +
+            'Сло-словил этот стресс, OBLA работал на износ (Я работал)',
+        owned: true,
+        time: '10:35 AM',
+    },
+    {
+        text:
+            'Со-соблюдай со мной distance, на бите я делаю бизнес (Без камер, а)\n' +
+            '\n' +
+            'Сделал бабки, как скаммер, палят меня, будто сканер (Скан, скан)\n' +
+            'Мувы бо— Мувы бо— Мувы большие, но я двигаюсь так, что пропал с этих камер',
         owned: false,
         time: '10:40 AM',
     },
     {
-        text: 'Vivamus finibus sollicitudin lorem eu hendrerit. Suspendisse luctus ornare aliquet.',
-        owned: false,
-        time: '10:35 AM',
-    },
-    {
-        text: 'Vivamus finibus sollicitudin lorem eu hendrerit. Suspendisse luctus ornare aliquet.',
-        owned: false,
-        time: '10:35 AM',
-    },
-    {
-        text: 'Vivamus finibus sollicitudin lorem eu hendrerit. Suspendisse luctus ornare aliquet.',
+        text: 'Ты крыса, ты сдал их, но это— но это был не экзамен (Snitch)',
         owned: true,
-        time: '9:35 AM',
-    },
-    {
-        text:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In elementum justo tortor, ut lobortis odio feugiat et. Fusce feugiat eros non quam fermentum accumsan. Fusce pulvinar eros sit amet dui finibus, id maximus ex convallis.',
-        owned: true,
-        time: '9:35 AM',
+        time: '10:45 AM',
     },
 ];
 
-const DirectChatScreen: React.FC<IDirectScreenChatProp> = props => {
-    const { name, avatar, isOnline } = props.userInfo;
+const DirectChatScreen = ({ route }) => {
+    const { name, avatar, isOnline } = route.params.userInfo;
+    const [messages, setMessages] = useState<Array<Message>>([]);
     const [inputHeight, setInputHeight] = useState<number | undefined>(undefined);
+    const [inputWidth, setInputWidth] = useState<number | undefined>(undefined);
 
     const renderItem = (item: Message) => (
         <View style={{ width: '100%', alignItems: item.owned ? 'flex-end' : 'flex-start' }}>
@@ -63,10 +72,14 @@ const DirectChatScreen: React.FC<IDirectScreenChatProp> = props => {
         </View>
     );
 
+    useEffect(() => {
+        setMessages(testMessages.reverse());
+    }, []);
+
     return (
         <View style={styles.screen__container}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image source={require('../assets/images/back.png')} style={styles.screen__back} />
+                <Image source={require('../../assets/images/back.png')} style={styles.screen__back} />
                 <View style={styles.element__avatarWrapper}>
                     <Image source={avatar} style={styles.element__avatar} />
                     <View style={styles.element__onlineOuterLayer}>
@@ -87,7 +100,7 @@ const DirectChatScreen: React.FC<IDirectScreenChatProp> = props => {
             </View>
             <Card style={styles.screen__content}>
                 <FlatList
-                    inverted
+                    inverted={true}
                     data={messages}
                     keyExtractor={(_, index) => index + ''}
                     renderItem={({ item }) => renderItem(item)}
@@ -98,6 +111,7 @@ const DirectChatScreen: React.FC<IDirectScreenChatProp> = props => {
                 <View
                     style={{
                         height: 'auto',
+                        width: 'auto',
                         backgroundColor: COLOR_GRAY,
                         marginStart: 8,
                         marginEnd: 8,
@@ -110,10 +124,11 @@ const DirectChatScreen: React.FC<IDirectScreenChatProp> = props => {
                         paddingEnd: 12,
                     }}
                 >
-                    <Image source={require('../assets/images/attach_icon.png')} style={{ width: 24, height: 24 }} />
+                    <Image source={require('../../assets/images/attach_icon.png')} style={{ width: 24, height: 24 }} />
                     <View style={{ width: 8 }} />
                     <TextInput
-                        style={{ flexGrow: 1, height: inputHeight, fontSize: SIZE_TEXT_PRIMARY }}
+                        onLayout={event => setInputWidth(event.nativeEvent.layout.width)}
+                        style={{ flexGrow: 1, maxWidth: inputWidth, height: inputHeight, fontSize: SIZE_TEXT_PRIMARY }}
                         placeholder='Type a message'
                         multiline
                         onContentSizeChange={event => {
@@ -124,9 +139,9 @@ const DirectChatScreen: React.FC<IDirectScreenChatProp> = props => {
                         }}
                     />
                     <View style={{ width: 8 }} />
-                    <Image source={require('../assets/images/Vector.png')} style={{ width: 24, height: 24 }} />
+                    <Image source={require('../../assets/images/Vector.png')} style={{ width: 24, height: 24 }} />
                     <View style={{ width: 8 }} />
-                    <Image source={require('../assets/images/Group.png')} style={{ width: 24, height: 24 }} />
+                    <Image source={require('../../assets/images/Group.png')} style={{ width: 24, height: 24 }} />
                 </View>
             </Card>
         </View>
@@ -180,9 +195,6 @@ const styles = StyleSheet.create({
         width: 8,
         height: 8,
         borderRadius: 4,
-    },
-    textinput: {
-        fontSize: SIZE_TEXT_PRIMARY,
     },
 });
 

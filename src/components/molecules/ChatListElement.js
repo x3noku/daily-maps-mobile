@@ -9,15 +9,15 @@ import { ripple } from '../../utils';
  * avatar: source
  * name: string
  * lastMessage: {text: string, date: date | long | string}
-
  * isOnline: boolean
+ * onPress: (event) => void;
  * */
 const ChatListElement = props => {
-    const { avatar, name, isOnline, lastMessage } = props;
+    const { avatar, name, isOnline, lastMessage, onPress } = props;
 
     return (
         <Pressable
-            onPress={() => console.log('click' + name)}
+            onPress={onPress}
             android_ripple={{ color: ripple(COLOR_TEXT_SECONDARY) }}
             style={styles.element__container}
         >

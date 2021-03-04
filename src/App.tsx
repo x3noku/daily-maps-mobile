@@ -6,7 +6,7 @@ import AppNavigator from './navigation/AppNavigator';
 const App = () => {
     return (
         <Provider store={store}>
-            <AppNavigator/>
+            <AppNavigator />
         </Provider>
     );
 };
