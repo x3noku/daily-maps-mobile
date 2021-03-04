@@ -1,6 +1,5 @@
 export const PrivateChatCreated = (res) => ({
     type: 'CHAT_CREATED_PRIVATE',
-
     payload: res
 });
 

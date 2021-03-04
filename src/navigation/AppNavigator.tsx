@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Screens } from '../utils/constants';
 import AuthStack from './AuthStack';
 import MainStack from './MainStack';
+import { useChatConnection } from '../context/SocketConnection';
 
 const Stack = createStackNavigator();
 
