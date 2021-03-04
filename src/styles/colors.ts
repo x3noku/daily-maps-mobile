@@ -9,3 +9,4 @@ export const COLOR_TEXT_DARK = '#22304A';
 export const COLOR_TEXT_PRIMARY = '#3E4855';
 export const COLOR_TEXT_SECONDARY = '#8c8c8c';
 export const COLOR_TEXT_ACCENT = '#E562EE';
+
