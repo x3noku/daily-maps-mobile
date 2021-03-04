@@ -1,15 +1,16 @@
 export const Screens = {
     stacks: {
         auth: 'AUTH',
-        main: 'MAIN'
+        main: 'MAIN',
+        chatDirect: 'CHAT_DIRECT',
     },
     auth: {
         signIn: 'SIGN_IN',
         signUp: 'SIGN_UP',
-        welcome: 'WELCOME'
+        welcome: 'WELCOME',
     },
     map: 'MAP',
     feed: 'FEED',
     profile: 'PROFILE',
-    chat: 'CHAT'
+    chatList: 'CHAT_LIST',
 };
