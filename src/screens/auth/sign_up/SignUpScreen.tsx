@@ -17,34 +17,36 @@ import PressableLabel from '../../../components/atoms/PressableLabel';
 import TextInputWithLabel from '../../../components/atoms/TextInputWithLabel';
 import { SIZE_TEXT_TITLE } from '../../../styles/sizes';
 import { ANIMATION_DURATION_SHORT } from '../../../styles/animations';
+import { useKeyboardHide, useKeyboardShow } from '../../../utils/hooks';
+import { Screens } from '../../../utils/constants';
+import { useCredentialsData, useSignUp } from './SignUp.hooks';
+import { saveToken } from '../../../utils/storage';
 
-const SignUpScreen = () => {
+const SignUpScreen = ({ navigation }: { navigation: any }) => {
     const keyboardOpened = useRef(new Animated.Value(0)).current;
-
-    const keyboardDidShowListener = () => {
+    useKeyboardShow(() => {
         Animated.timing(keyboardOpened, {
             useNativeDriver: false,
             duration: ANIMATION_DURATION_SHORT,
             toValue: 1,
         }).start();
-    };
-    const keyboardDidHideListener = () => {
+    });
+    useKeyboardHide(() => {
         Animated.timing(keyboardOpened, {
             useNativeDriver: false,
             duration: ANIMATION_DURATION_SHORT,
             toValue: 0,
         }).start();
-    };
+    });
+
+    const { isLoading, token, errors, signUp } = useSignUp();
+    const { username, email, login, password, setUsername, setEmail, setLogin, setPassword } = useCredentialsData();
 
     useEffect(() => {
-        Keyboard.addListener('keyboardDidShow', keyboardDidShowListener);
-        Keyboard.addListener('keyboardDidHide', keyboardDidHideListener);
-
-        return () => {
-            Keyboard.addListener('keyboardDidShow', keyboardDidShowListener);
-            Keyboard.addListener('keyboardDidHide', keyboardDidHideListener);
-        };
-    }, []);
+        if (token !== null && errors === null) {
+            saveToken(token);
+        }
+    }, [token]);
 
     return (
         <View style={styles.screen__container}>
@@ -83,24 +85,32 @@ const SignUpScreen = () => {
                                 <TextInputWithLabel
                                     placeholder='Login'
                                     containerStyle={styles.screen__contentBodyCredentialsElement}
+                                    onChangeText={setLogin}
                                 />
+                                {/* TODO: CHANGE TO PHONE NUMBER */}
                                 <TextInputWithLabel
-                                    placeholder='Phone number'
+                                    placeholder='Username'
                                     containerStyle={styles.screen__contentBodyCredentialsElement}
+                                    onChangeText={setUsername}
                                 />
                                 <TextInputWithLabel
                                     placeholder='Email'
                                     containerStyle={styles.screen__contentBodyCredentialsElement}
+                                    onChangeText={setEmail}
                                 />
                                 <TextInputWithLabel
                                     placeholder='Password'
                                     containerStyle={styles.screen__contentBodyCredentialsElement}
+                                    onChangeText={setPassword}
                                 />
                             </View>
                             <Button
                                 type={ButtonType.Contained}
-                                text='Войти'
+                                text='Зарегистрироваться'
                                 containerStyle={styles.screen__contentBodyButton}
+                                onPress={() => {
+                                    signUp(username, email, login, password);
+                                }}
                             />
                             <View style={[styles.screen__contentBodyLogin, styles.screen__contentBodyElement]}>
                                 <Label
@@ -113,6 +123,9 @@ const SignUpScreen = () => {
                                     type={[LabelType.Small]}
                                     text='Войти'
                                     textStyle={styles.screen__contentBodyLoginAccent}
+                                    onPress={() => {
+                                        navigation.navigate(Screens.auth.signIn);
+                                    }}
                                     rippleActive
                                 />
                             </View>

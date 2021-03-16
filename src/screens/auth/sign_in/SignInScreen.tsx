@@ -18,34 +18,36 @@ import Space, { SpaceType } from '../../../components/atoms/Space';
 import PressableLabel from '../../../components/atoms/PressableLabel';
 import { SIZE_TEXT_TITLE } from '../../../styles/sizes';
 import { COLOR_TEXT_SECONDARY, COLOR_WHITE } from '../../../styles/colors';
+import { useKeyboardShow, useKeyboardHide } from '../../../utils/hooks';
+import { Screens } from '../../../utils/constants';
+import { useCredentialsData, useSignIn } from './SignIn.hooks';
+import { saveToken } from '../../../utils/storage';
 
-const SignInScreen = () => {
+const SignInScreen = ({ navigation }: { navigation: any }) => {
     const keyboardOpened = useRef(new Animated.Value(0)).current;
-
-    const keyboardDidShowListener = () => {
+    useKeyboardShow(() => {
         Animated.timing(keyboardOpened, {
             useNativeDriver: false,
             duration: ANIMATION_DURATION_SHORT,
             toValue: 1,
         }).start();
-    };
-    const keyboardDidHideListener = () => {
+    });
+    useKeyboardHide(() => {
         Animated.timing(keyboardOpened, {
             useNativeDriver: false,
             duration: ANIMATION_DURATION_SHORT,
             toValue: 0,
         }).start();
-    };
+    });
+
+    const { isLoading, token, errors, signIn } = useSignIn();
+    const { login, password, setLogin, setPassword } = useCredentialsData();
 
     useEffect(() => {
-        Keyboard.addListener('keyboardDidShow', keyboardDidShowListener);
-        Keyboard.addListener('keyboardDidHide', keyboardDidHideListener);
-
-        return () => {
-            Keyboard.addListener('keyboardDidShow', keyboardDidShowListener);
-            Keyboard.addListener('keyboardDidHide', keyboardDidHideListener);
-        };
-    }, []);
+        if (token !== null && errors === null) {
+            saveToken(token);
+        }
+    }, [token]);
 
     return (
         <View style={styles.screen__container}>
@@ -88,10 +90,12 @@ const SignInScreen = () => {
                                 <TextInputWithLabel
                                     placeholder='Login'
                                     containerStyle={styles.screen__contentBodyCredentialsElement}
+                                    onChangeText={setLogin}
                                 />
                                 <TextInputWithLabel
                                     placeholder='Password'
                                     containerStyle={styles.screen__contentBodyCredentialsElement}
+                                    onChangeText={setPassword}
                                 />
                             </View>
                             <View style={styles.screen__contentBodyElement}>
@@ -99,6 +103,9 @@ const SignInScreen = () => {
                                     type={ButtonType.Contained}
                                     text='Войти'
                                     containerStyle={styles.screen__contentBodyButton}
+                                    onPress={() => {
+                                        signIn(login, password);
+                                    }}
                                 />
                                 <Space type={SpaceType.XXLittle} />
                                 <PressableLabel
@@ -112,6 +119,9 @@ const SignInScreen = () => {
                                 type={ButtonType.Outlined}
                                 text='Создать аккаунт'
                                 containerStyle={[styles.screen__contentBodyButton]}
+                                onPress={() => {
+                                    navigation.navigate(Screens.auth.signUp);
+                                }}
                             />
                         </Card>
                     </View>

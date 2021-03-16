@@ -1,12 +1,18 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
+import { getToken } from '../../../utils/storage';
+import { Screens } from '../../../utils/constants';
 
-const WelcomeScreen = () => {
-    return (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Text>Welcome Screen</Text>
-        </View>
-    )
+const WelcomeScreen = ({ navigation }: { navigation: any }) => {
+    getToken().then(token => {
+        if (token !== null && token !== undefined) {
+            navigation.navigate(Screens.stacks.main);
+        } else {
+            navigation.navigate(Screens.auth.signIn);
+        }
+    });
+
+    return <View />;
 };
 
 export default WelcomeScreen;

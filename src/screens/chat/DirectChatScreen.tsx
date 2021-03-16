@@ -73,7 +73,7 @@ const DirectChatScreen = ({ route }) => {
     );
 
     useEffect(() => {
-        setMessages(testMessages.reverse());
+        setMessages(messages);
     }, []);
 
     return (

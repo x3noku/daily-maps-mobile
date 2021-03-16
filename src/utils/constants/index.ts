@@ -14,3 +14,7 @@ export const Screens = {
     profile: 'PROFILE',
     chatList: 'CHAT_LIST',
 };
+
+export const StorageKeys = {
+    token: '@TOKEN',
+};

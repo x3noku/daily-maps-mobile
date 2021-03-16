@@ -11,7 +11,7 @@ const Stack = createStackNavigator();
 const AppNavigator = () => {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={Screens.stacks.main} screenOptions={{ headerShown: false }}>
+            <Stack.Navigator initialRouteName={Screens.stacks.auth} screenOptions={{ headerShown: false }}>
                 <Stack.Screen name={Screens.stacks.auth} component={AuthStack} />
                 <Stack.Screen name={Screens.stacks.main} component={MainStack} />
                 <Stack.Screen name={Screens.stacks.chatDirect} component={DirectChatScreen} />
