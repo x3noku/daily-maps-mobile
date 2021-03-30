@@ -8,7 +8,7 @@ import { ripple } from '../../utils';
  * PROPS
  * avatar: source
  * name: string
- * lastMessage: {text: string, date: date | long | string}
+ * lastMessage: {body: string, date: date | long | string}
  * isOnline: boolean
  * onPress: (event) => void;
  * */
@@ -35,13 +35,13 @@ const ChatListElement = props => {
             <View style={{ width: 8 }} />
             <View style={styles.element__nameAndMessageBlock}>
                 <Label
-                    type={[LabelType.Medium, LabelType.Bold]}
+                    type={[LabelType.Default, LabelType.Bold]}
                     text={name}
                     containerStyle={{ paddingTop: 0, paddingBottom: 0 }}
                 />
                 <Label
                     type={[LabelType.Small, LabelType.Bold]}
-                    text={lastMessage.text}
+                    text={lastMessage.body}
                     textStyle={{ color: COLOR_TEXT_SECONDARY }}
                     containerStyle={{ paddingTop: 0, paddingBottom: 6 }}
                 />
@@ -70,8 +70,8 @@ const styles = StyleSheet.create({
         borderRadius: 26,
     },
     element__avatarWrapper: {
-        width: 48,
-        height: 48,
+        width: 52,
+        height: 52,
     },
     element__onlineOuterLayer: {
         position: 'absolute',

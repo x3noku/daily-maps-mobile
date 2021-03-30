@@ -1,10 +1,8 @@
 import React from 'react';
-import { Pressable, View, Text, StyleSheet } from 'react-native';
+import { Pressable, View, Text, StyleSheet, StyleProp } from 'react-native';
 import { COLOR_WHITE, COLOR_BLUE_PRIMARY, COLOR_BLUE_SECONDARY } from '../../styles/colors';
 import { SIZE_TEXT_PRIMARY } from '../../styles/sizes';
 import { ripple } from '../../utils';
-
-//TODO: FIX THE MARGINS
 
 export interface IButtonProp {
     text?: string;
@@ -13,8 +11,9 @@ export interface IButtonProp {
     onLongPress?: (event: Event) => void;
     onPressIn?: (event: Event) => void;
     onPressOut?: (event: Event) => void;
-    textStyle?: any;
-    containerStyle?: any;
+    textStyles?: StyleProp<any> | Array<StyleProp<any>>;
+    containerStyles?: StyleProp<any> | Array<StyleProp<any>>;
+    rippleActive?: boolean;
 }
 
 export enum ButtonType {
@@ -24,9 +23,22 @@ export enum ButtonType {
 }
 
 const Button: React.FC<IButtonProp> = props => {
-    const { text, type, onPress, onLongPress, onPressIn, onPressOut, textStyle, containerStyle } = props;
+    const {
+        text,
+        type,
+        onPress,
+        onLongPress,
+        onPressIn,
+        onPressOut,
+        textStyles,
+        containerStyles,
+        rippleActive,
+    } = props;
+    const textStyle: StyleProp<any> = textStyles instanceof Array ? Object.assign({}, ...textStyles) : textStyles;
+    const containerStyle: StyleProp<any> =
+        containerStyles instanceof Array ? Object.assign({}, ...containerStyles) : containerStyles;
 
-    let typedStyle: any = null;
+    let typedStyle: StyleProp<any> = null;
     let rippleColor: any = null;
     switch (type) {
         case ButtonType.Contained:
@@ -34,7 +46,7 @@ const Button: React.FC<IButtonProp> = props => {
             rippleColor = ripple(
                 containerStyle?.backgroundColor !== undefined
                     ? containerStyle.backgroundColor
-                    : styles.button__container.backgroundColor,
+                    : styles.button__wrapper.backgroundColor,
             );
             break;
         case ButtonType.Outlined:
@@ -42,7 +54,7 @@ const Button: React.FC<IButtonProp> = props => {
             rippleColor = ripple(
                 containerStyle?.borderColor !== undefined
                     ? containerStyle.borderColor
-                    : styles.button__container.borderColor,
+                    : styles.button__wrapper.borderColor,
             );
             break;
         case ButtonType.Text:
@@ -52,18 +64,19 @@ const Button: React.FC<IButtonProp> = props => {
     }
 
     return (
-        <View style={styles.button__wrapper}>
+        <View style={[styles.button__wrapper, containerStyle, typedStyle]}>
             <Pressable
                 onPress={onPress}
                 onLongPress={onLongPress}
                 onPressIn={onPressIn}
                 onPressOut={onPressOut}
-                android_ripple={{ color: rippleColor }}
+                android_ripple={rippleActive ? { color: rippleColor } : {}}
                 style={[
                     styles.button__container,
-                    containerStyle,
-                    typedStyle,
                     { borderRadius: styles.button__wrapper.borderRadius },
+                    containerStyle !== undefined && Object.keys(containerStyle).includes('width')
+                        ? { width: '100%' }
+                        : {},
                 ]}
             >
                 <Text
@@ -85,6 +98,11 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         overflow: 'hidden',
         flexDirection: 'row',
+        alignSelf: 'baseline',
+
+        backgroundColor: COLOR_BLUE_PRIMARY,
+        borderColor: COLOR_BLUE_SECONDARY,
+        borderWidth: 2,
     },
     button__container: {
         paddingLeft: 32,
@@ -92,10 +110,6 @@ const styles = StyleSheet.create({
         paddingRight: 32,
         paddingBottom: 12,
         justifyContent: 'center',
-
-        backgroundColor: COLOR_BLUE_PRIMARY,
-        borderColor: COLOR_BLUE_SECONDARY,
-        borderWidth: 2,
     },
     button__text: {
         fontSize: SIZE_TEXT_PRIMARY,

@@ -5,9 +5,9 @@
  * @field error - Object which contains all data about API error ( null if success TRUE )
  */
 export interface IApiResponse<RD> {
-    success: boolean
-    response: RD | null,
-    error: IApiError | null
+    success: boolean;
+    response: RD | null;
+    error: IApiError | null;
 }
 
 /**
@@ -16,8 +16,8 @@ export interface IApiResponse<RD> {
  * @field message - error message
  */
 export interface IApiError {
-    statusCode: number,
-    message: string | null
+    statusCode: number;
+    message: string | null;
 }
 
 /**
@@ -25,5 +25,5 @@ export interface IApiError {
  * @field token - user's token
  */
 export interface ITokenApiPayload {
-   token: string
+    token: string;
 }

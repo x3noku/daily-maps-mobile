@@ -11,8 +11,8 @@ const CodeNumberKey: React.FC<ICodeNumberKeyProp> = props => {
     const { value, onPress } = props;
 
     return (
-        <Pressable style={styles.codeKey__outerLayer} onPress={onPress}>
-            <View style={styles.codeKey__innerLayer}>
+        <Pressable style={styles.codeKey__wrapper} onPress={onPress}>
+            <View style={styles.codeKey__container}>
                 <Text style={styles.codeKey__text}>{value !== undefined ? value : '_'}</Text>
             </View>
         </Pressable>
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
         height: 0,
         width: 0,
     },
-    codeKey__outerLayer: {
+    codeKey__wrapper: {
         backgroundColor: '#E8E5F6',
         borderRadius: 8,
         height: 58,
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
         marginStart: 4,
         marginEnd: 4,
     },
-    codeKey__innerLayer: {
+    codeKey__container: {
         backgroundColor: '#F5F8FA',
         borderRadius: 8,
         height: 54,

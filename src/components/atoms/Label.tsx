@@ -21,7 +21,7 @@ export enum LabelType {
     Bold,
     Little,
     Small,
-    Medium,
+    Default,
     Big,
     Large,
 }
@@ -29,7 +29,7 @@ export enum LabelType {
 const Label: React.FC<ILabelProp> = props => {
     const { text, type, textStyle, containerStyle } = props;
 
-    const typedStyle: any[] = [];
+    const typedStyle: Array<any> = [];
     const types = type instanceof Array ? type : [type];
     types.forEach(it => {
         switch (it) {
@@ -45,7 +45,7 @@ const Label: React.FC<ILabelProp> = props => {
             case LabelType.Big:
                 typedStyle.push(styles.label__text_type_big);
                 break;
-            case LabelType.Medium:
+            case LabelType.Default:
                 typedStyle.push(styles.label__text_type_medium);
                 break;
             case LabelType.Small:

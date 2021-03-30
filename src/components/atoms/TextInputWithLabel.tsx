@@ -56,6 +56,7 @@ const TextInputWithLabel: React.FC<ITextInputWithLabelProp> = props => {
                 onBlur={() => setIsFocused(false)}
                 secureTextEntry={secureTextEntry}
                 blurOnSubmit={blurOnSubmit !== undefined ? blurOnSubmit : true}
+                multiline={true}
             />
         </View>
     );
@@ -73,6 +74,7 @@ const styles = StyleSheet.create({
         paddingBottom: 2,
     },
     textInput__input: {
+        minHeight: SIZE_TEXT_PRIMARY * 2.5,
         paddingStart: 0,
         paddingBottom: 4,
         paddingEnd: 0,

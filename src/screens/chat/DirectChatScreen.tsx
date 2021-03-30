@@ -1,99 +1,75 @@
-import React, { useEffect, useState } from 'react';
-import { FlatList, Image, StyleSheet, View, TextInput } from 'react-native';
-import Card from '../../components/atoms/Card';
-import { COLOR_BLUE_PRIMARY, COLOR_GRAY, COLOR_TEXT_SECONDARY, COLOR_WHITE } from '../../styles/colors';
-import Label, { LabelType } from '../../components/atoms/Label';
-import { SIZE_TEXT_PRIMARY } from '../../styles/sizes';
-import ChatMessageElement from '../../components/molecules/ChatMessageElement';
-import Space, { SpaceType } from '../../components/atoms/Space';
+import React, { useEffect, useState } from "react";
+import { FlatList, Image, StyleSheet, TextInput, View } from "react-native";
+import { COLOR_BLUE_PRIMARY, COLOR_GRAY, COLOR_WHITE } from "../../styles/colors";
+import Label, { LabelType } from "../../components/atoms/Label";
+import ChatMessageElement from "../../components/molecules/ChatMessageElement";
+import Space, { SpaceType } from "../../components/atoms/Space";
+import IChat from "../../models/chat/Chat";
+import { useSocketConnection } from "../../context/SocketSonnectionContext";
+import IMessage from "../../models/chat/message/Message";
+import IconButton, { IconButtonType } from "../../components/atoms/IconButton";
+import Card from "../../components/atoms/Card";
+import { SIZE_TEXT_PRIMARY } from "../../styles/sizes";
+import { Screens } from "../../utils/constants";
 
-type Message = {
-    text: string;
-    owned: boolean;
-    time: string;
-};
-
-const testMessages: Array<Message> = [
-    {
-        text:
-            'Делаю shot как Лэмпард, взял победу как Бэкхем (Victoria)\n' +
-            'Ты-ты улетаешь как Хэнкок, первый раз попав в Bando (В bando)\n' +
-            'Пиздите как моя ex-hoe, кепки на вас будто Kangol (Фу-у, lean, lean)\n' +
-            'На-на-набили слухами backpack, вам доносится эхо (Алло?)\n',
-        owned: true,
-        time: '9:35 AM',
-    },
-    {
-        text: 'Алло-алло, сука, ты с улиц как Элмо, а (Ты красный)',
-        owned: true,
-        time: '9:35 AM',
-    },
-    {
-        text:
-            'Я с улиц Иркутска — поверь мне, тут тебя кинут на деньги, ха (Вэй-вэй-вэй)\n' +
-            'Порежут-порежут на семплы, не смейся, ты не на stand up, а (Чу-у, а-ха)',
-        owned: false,
-        time: '10:35 AM',
-    },
-    {
-        text:
-            'А-а-алло-алло, покури ствол extendo, а (Алло-алло)\n' +
-            'Куш пуш— Куш пушистый как gizmo, а (Gizmo)\n' +
-            'Дел-дел-делаю пресс, как фитнесс, я пропал, будто призрак (Ghosty)\n' +
-            'Сло-словил этот стресс, OBLA работал на износ (Я работал)',
-        owned: true,
-        time: '10:35 AM',
-    },
-    {
-        text:
-            'Со-соблюдай со мной distance, на бите я делаю бизнес (Без камер, а)\n' +
-            '\n' +
-            'Сделал бабки, как скаммер, палят меня, будто сканер (Скан, скан)\n' +
-            'Мувы бо— Мувы бо— Мувы большие, но я двигаюсь так, что пропал с этих камер',
-        owned: false,
-        time: '10:40 AM',
-    },
-    {
-        text: 'Ты крыса, ты сдал их, но это— но это был не экзамен (Snitch)',
-        owned: true,
-        time: '10:45 AM',
-    },
-];
-
-const DirectChatScreen = ({ route }) => {
-    const { name, avatar, isOnline } = route.params.userInfo;
-    const [messages, setMessages] = useState<Array<Message>>([]);
+const DirectChatScreen = ({ navigation, route }) => {
+    const { chatId, type, title, lastMessage, users } = route.params.chat as IChat;
+    const author = lastMessage.isOwned
+        ? users.find(user => user.login !== lastMessage.author.login)
+        : users.find(user => user.login === lastMessage.author.login);
+    const [messages, setMessages] = useState<Array<IMessage>>([]);
     const [inputHeight, setInputHeight] = useState<number | undefined>(undefined);
     const [inputWidth, setInputWidth] = useState<number | undefined>(undefined);
+    const [messageBody, setMessageBody] = useState('');
 
-    const renderItem = (item: Message) => (
-        <View style={{ width: '100%', alignItems: item.owned ? 'flex-end' : 'flex-start' }}>
-            <ChatMessageElement text={item.text} owned={item.owned} date={item.time} />
+    const socketConnection = useSocketConnection();
+    
+    socketConnection.chatConnection.getChatMessages({ chatId: chatId });
+    socketConnection.chatConnection.setOnGetMessagesHandler(response => {
+        if (response.success && response.response && response.response.messages) {
+            if(messages.length === 0) {
+                setMessages(response.response.messages);
+            }
+        }
+    });
+    socketConnection.chatConnection.setOnNewMessageHandler(response => {
+        console.log('DIRECT_CHAT_ON_NEW_MESSAGE');
+        if(response.success && response.response) {
+            console.log('NEW_MESSAGE', response);
+            console.log('ON NEW MESSAGE: MESSAGES LENGTH IS', messages.length);
+            setMessages([...messages, response.response]);
+        }
+    });
+    
+    useEffect(() => {
+        console.log('MESSAGES_LENGTH', messages.length);
+    }, [messages])
+    
+    const renderItem = (message: IMessage) => (
+        <View key={message.messageId} style={{ width: '100%', alignItems: message.isOwned ? 'flex-end' : 'flex-start' }}>
+            <Space type={SpaceType.Default} />
+            <ChatMessageElement text={message.body} owned={message.isOwned} date={message.date.toString()} />
         </View>
     );
-
-    useEffect(() => {
-        setMessages(messages);
-    }, []);
 
     return (
         <View style={styles.screen__container}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image source={require('../../assets/images/back.png')} style={styles.screen__back} />
+                <IconButton type={[IconButtonType.Default, IconButtonType.Icon]} icon={require('../../assets/images/back.png')} containerStyles={styles.screen__back} onPress={() => navigation.goBack()}/>
                 <View style={styles.element__avatarWrapper}>
-                    <Image source={avatar} style={styles.element__avatar} />
+                    <Image source={require('../../assets/images/avatar_debug.png')} style={styles.element__avatar}/>
                     <View style={styles.element__onlineOuterLayer}>
                         <View
                             style={[
                                 styles.element__onlineInnerLayer,
-                                { backgroundColor: isOnline ? COLOR_BLUE_PRIMARY : COLOR_TEXT_SECONDARY },
+                                { backgroundColor: COLOR_BLUE_PRIMARY },
                             ]}
                         />
                     </View>
                 </View>
                 <Label
                     type={[LabelType.Large, LabelType.Bold]}
-                    text={name}
+                    text={author?.username}
                     textStyle={{ color: COLOR_WHITE }}
                     containerStyle={{ marginStart: 8, marginTop: 12, marginBottom: 12 }}
                 />
@@ -101,12 +77,11 @@ const DirectChatScreen = ({ route }) => {
             <Card style={styles.screen__content}>
                 <FlatList
                     inverted={true}
-                    data={messages}
-                    keyExtractor={(_, index) => index + ''}
-                    renderItem={({ item }) => renderItem(item)}
-                    ItemSeparatorComponent={() => <Space type={SpaceType.Medium} />}
+                    data={[...messages].reverse()}
+                    keyExtractor={message => message.messageId}
+                    renderItem={({ item: message }: { item: IMessage }) => renderItem(message)}
                     style={{ marginTop: 36, flex: 1 }}
-                    ListHeaderComponent={<Space type={SpaceType.Big} />}
+                    ListHeaderComponent={<Space key='ListHeaderComponent' type={SpaceType.Big} />}
                 />
                 <View
                     style={{
@@ -120,12 +95,11 @@ const DirectChatScreen = ({ route }) => {
                         overflow: 'hidden',
                         flexDirection: 'row',
                         alignItems: 'center',
-                        paddingStart: 12,
-                        paddingEnd: 12,
+                        paddingStart: 8,
+                        paddingEnd: 8,
                     }}
                 >
-                    <Image source={require('../../assets/images/attach_icon.png')} style={{ width: 24, height: 24 }} />
-                    <View style={{ width: 8 }} />
+                    <IconButton type={[IconButtonType.Icon, IconButtonType.Small]} icon={require('../../assets/images/attach_icon.png')} rippleActive />
                     <TextInput
                         onLayout={event => setInputWidth(event.nativeEvent.layout.width)}
                         style={{ flexGrow: 1, maxWidth: inputWidth, height: inputHeight, fontSize: SIZE_TEXT_PRIMARY }}
@@ -137,11 +111,21 @@ const DirectChatScreen = ({ route }) => {
                                 setInputHeight(event.nativeEvent.contentSize.height);
                             }
                         }}
+                        onChangeText={setMessageBody}
                     />
-                    <View style={{ width: 8 }} />
-                    <Image source={require('../../assets/images/Vector.png')} style={{ width: 24, height: 24 }} />
-                    <View style={{ width: 8 }} />
-                    <Image source={require('../../assets/images/Group.png')} style={{ width: 24, height: 24 }} />
+                    <IconButton type={[IconButtonType.Icon, IconButtonType.Small]} icon={require('../../assets/images/Vector.png')} rippleActive />
+                    <IconButton type={[IconButtonType.Icon, IconButtonType.Small]} icon={require('../../assets/images/send.png')} rippleActive onPress={() => {
+                        if(socketConnection) {
+                            socketConnection.chatConnection.sendMessage({
+                                chatId: chatId,
+                                type: MessageType.string,
+                                body: messageBody
+                            });
+                            socketConnection.chatConnection.setOnSendMessageHandler(response => {
+                                console.log('SEND_MESSAGE', response);
+                            })
+                        }
+                    }}/>
                 </View>
             </Card>
         </View>
@@ -158,8 +142,6 @@ const styles = StyleSheet.create({
         backgroundColor: COLOR_BLUE_PRIMARY,
     },
     screen__back: {
-        width: 36,
-        height: 36,
         marginStart: 12,
     },
     screen__content: {

@@ -11,7 +11,7 @@ export enum SpaceType {
     XLittle,
     Little,
     Small,
-    Medium,
+    Default,
     Big,
     Large,
     XLarge,
@@ -41,7 +41,7 @@ const Space: React.FC<ISpaceProp> = props => {
             case SpaceType.Small:
                 setHeight(12);
                 break;
-            case SpaceType.Medium:
+            case SpaceType.Default:
                 setHeight(16);
                 break;
             case SpaceType.Big:

@@ -29,39 +29,39 @@ Launch Instructions for iOS:
 #### Run development build
 ##### Windows
 ```console
-$ yarn android-dev-windows     
+$ yarn android-dev-windows
 ```
 ##### PowerShell 
 ```console
-$ yarn android-dev-powershell   
+$ yarn android-dev-powershell
 ```
 ##### bash
 ```console
-$ yarn android-dev-bash 
+$ yarn android-dev-bash
 ```
 #### Run production build
 ##### Windows
 ```console
-$ yarn android-prod-windows     
+$ yarn android-prod-windows
 ```
 ##### PowerShell 
 ```console
-$ yarn android-prod-powershell   
+$ yarn android-prod-powershell
 ```
 ##### bash
 ```console
-$ yarn android-prod-bash 
+$ yarn android-prod-bash
 ```
 
 ### For IOS: 
 
 #### Run development build:
 ```console
-$ yarn ios-dev     
+$ yarn ios-dev
 ```
 #### Run production build:
 ```console
-$ yarn ios-prod    
+$ yarn ios-prod
 ```
 
 ---

@@ -22,6 +22,7 @@ import { useKeyboardShow, useKeyboardHide } from '../../../utils/hooks';
 import { Screens } from '../../../utils/constants';
 import { useCredentialsData, useSignIn } from './SignIn.hooks';
 import { saveToken } from '../../../utils/storage';
+import { getRootHeightPercents, getRootWidthPercents } from '../../../utils';
 
 const SignInScreen = ({ navigation }: { navigation: any }) => {
     const keyboardOpened = useRef(new Animated.Value(0)).current;
@@ -96,16 +97,21 @@ const SignInScreen = ({ navigation }: { navigation: any }) => {
                                     placeholder='Password'
                                     containerStyle={styles.screen__contentBodyCredentialsElement}
                                     onChangeText={setPassword}
+                                    secureTextEntry
                                 />
                             </View>
                             <View style={styles.screen__contentBodyElement}>
                                 <Button
                                     type={ButtonType.Contained}
                                     text='Войти'
-                                    containerStyle={styles.screen__contentBodyButton}
+                                    containerStyles={[
+                                        styles.screen__contentBodyButton,
+                                        styles.screen__contentBodyElement,
+                                    ]}
                                     onPress={() => {
                                         signIn(login, password);
                                     }}
+                                    rippleActive
                                 />
                                 <Space type={SpaceType.XXLittle} />
                                 <PressableLabel
@@ -118,10 +124,11 @@ const SignInScreen = ({ navigation }: { navigation: any }) => {
                             <Button
                                 type={ButtonType.Outlined}
                                 text='Создать аккаунт'
-                                containerStyle={[styles.screen__contentBodyButton]}
+                                containerStyles={[styles.screen__contentBodyButton, styles.screen__contentBodyElement]}
                                 onPress={() => {
                                     navigation.navigate(Screens.auth.signUp);
                                 }}
+                                rippleActive
                             />
                         </Card>
                     </View>
@@ -134,12 +141,14 @@ const SignInScreen = ({ navigation }: { navigation: any }) => {
 const styles = StyleSheet.create({
     screen__container: {
         flex: 1,
+        width: getRootWidthPercents(100),
+        height: getRootHeightPercents(100),
     },
     screen__cover: {
         position: 'absolute',
-        minHeight: '100%',
-        width: '100%',
-        marginTop: '-10%',
+        minHeight: getRootHeightPercents(100),
+        width: getRootWidthPercents(100),
+        marginTop: getRootHeightPercents(-5),
     },
     screen__contentWrapper: {
         flex: 1,
@@ -150,16 +159,16 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     screen__contentTitle_style_container: {
-        marginTop: '2%',
-        marginStart: '1%',
+        marginTop: getRootHeightPercents(2),
+        marginStart: getRootWidthPercents(1),
     },
     screen__contentTitle_style_text: {
         color: COLOR_WHITE,
     },
     screen__contentBody: {
-        minHeight: '65%',
+        minHeight: getRootHeightPercents(65),
         height: 'auto',
-        justifyContent: 'space-between',
+        justifyContent: 'space-evenly',
         alignItems: 'center',
         paddingStart: 24,
         paddingTop: 36,
@@ -173,7 +182,7 @@ const styles = StyleSheet.create({
     },
     screen__contentBodyCredentials: {
         justifyContent: 'space-between',
-        width: '85%',
+        width: getRootWidthPercents(75),
         maxWidth: 320,
     },
     screen__contentBodyCredentialsElement: {
@@ -185,7 +194,8 @@ const styles = StyleSheet.create({
         color: COLOR_TEXT_SECONDARY,
     },
     screen__contentBodyButton: {
-        width: '70%',
+        alignSelf: 'center',
+        width: getRootWidthPercents(65),
         maxWidth: 256,
     },
     screen__contentBodyElement: {
