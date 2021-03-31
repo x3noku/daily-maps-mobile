@@ -7,7 +7,7 @@ import FeedScreen from '../screens/feed/FeedScreen';
 import MapScreen from '../screens/map/MapScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
 import ChatScreen from '../screens/chat/ChatScreen';
-import AddTaskPrimaryScreen from '../screens/tasks/add_task_primary/AddTaskPrimaryScreen';
+import CreateTaskPrimaryScreen from '../screens/createTask/create_task_primary/CreateTaskPrimaryScreen';
 
 const Tab = createBottomTabNavigator();
 

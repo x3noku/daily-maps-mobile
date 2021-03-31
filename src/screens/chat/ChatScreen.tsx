@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { FlatList, Image, StyleSheet, View } from 'react-native';
 import { COLOR_BLUE_PRIMARY, COLOR_WHITE } from '../../styles/colors';
 import Card from '../../components/atoms/Card';
@@ -52,7 +52,7 @@ const ChatScreen = ({ navigation }: { navigation: any }) => {
         }
     }, []);
 
-    const renderItem = (chat: IChat) => {
+    const renderItem = (chat: IChat): ReactElement => {
         const author = chat.lastMessage.isOwned
             ? chat.users.find(user => user.login !== chat.lastMessage.author.login)
             : chat.users.find(user => user.login === chat.lastMessage.author.login);

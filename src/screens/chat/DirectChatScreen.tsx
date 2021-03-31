@@ -6,7 +6,7 @@ import ChatMessageElement from "../../components/molecules/ChatMessageElement";
 import Space, { SpaceType } from "../../components/atoms/Space";
 import IChat from "../../models/chat/Chat";
 import { useSocketConnection } from "../../context/SocketSonnectionContext";
-import IMessage from "../../models/chat/message/Message";
+import IMessage, { MessageType } from "../../models/chat/message/Message";
 import IconButton, { IconButtonType } from "../../components/atoms/IconButton";
 import Card from "../../components/atoms/Card";
 import { SIZE_TEXT_PRIMARY } from "../../styles/sizes";

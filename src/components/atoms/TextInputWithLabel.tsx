@@ -1,19 +1,41 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, StyleSheet, TextInput, View } from 'react-native';
+import {
+    Animated,
+    NativeSyntheticEvent,
+    StyleSheet,
+    TextInput,
+    TextInputSubmitEditingEventData,
+    View,
+} from 'react-native';
 import { COLOR_TEXT_PRIMARY, COLOR_TEXT_SECONDARY } from '../../styles/colors';
 import { SIZE_TEXT_HINT, SIZE_TEXT_PRIMARY, SIZE_TEXT_SECONDARY } from '../../styles/sizes';
 import { ANIMATION_DURATION_VERY_SHORT } from '../../styles/animations';
 
 export interface ITextInputWithLabelProp {
+    value?: string;
     placeholder?: string;
     onChangeText?: (text: string) => void;
     secureTextEntry?: boolean;
+    readonly?: boolean;
     blurOnSubmit?: boolean;
+    onSubmitEditing?: (event: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void;
+    onLayout?: () => void;
     containerStyle?: any;
+    onFocus?: () => void;
 }
 
 const TextInputWithLabel: React.FC<ITextInputWithLabelProp> = props => {
-    const { placeholder, onChangeText, secureTextEntry, blurOnSubmit, containerStyle } = props;
+    const {
+        value,
+        placeholder,
+        onChangeText,
+        secureTextEntry,
+        blurOnSubmit,
+        onSubmitEditing,
+        onLayout,
+        containerStyle,
+        onFocus,
+    } = props;
 
     const [isFocused, setIsFocused] = useState(false);
     const [text, setText] = useState('');
@@ -22,13 +44,13 @@ const TextInputWithLabel: React.FC<ITextInputWithLabelProp> = props => {
     useEffect(() => {
         Animated.timing(labelDeviation, {
             useNativeDriver: false,
-            toValue: isFocused || text !== '' ? 1 : 0,
+            toValue: isFocused || text !== '' || (value !== undefined && value !== '') ? 1 : 0,
             duration: ANIMATION_DURATION_VERY_SHORT,
         }).start();
     }, [isFocused, text]);
 
     return (
-        <View style={[styles.textInput__container, containerStyle]}>
+        <View style={[styles.textInput__container, containerStyle]} onLayout={onLayout}>
             <Animated.Text
                 style={[
                     styles.textInput__label,
@@ -48,15 +70,20 @@ const TextInputWithLabel: React.FC<ITextInputWithLabelProp> = props => {
             </Animated.Text>
             <TextInput
                 style={styles.textInput__input}
+                value={value ? value : text}
                 onChangeText={value => {
                     setText(value);
                     onChangeText?.(value);
                 }}
-                onFocus={() => setIsFocused(true)}
+                onFocus={() => {
+                    setIsFocused(true);
+                    onFocus?.();
+                }}
                 onBlur={() => setIsFocused(false)}
                 secureTextEntry={secureTextEntry}
                 blurOnSubmit={blurOnSubmit !== undefined ? blurOnSubmit : true}
                 multiline={true}
+                onSubmitEditing={onSubmitEditing}
             />
         </View>
     );
