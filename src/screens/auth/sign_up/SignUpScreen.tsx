@@ -45,7 +45,9 @@ const SignUpScreen = ({ navigation }: { navigation: any }) => {
 
     useEffect(() => {
         if (token !== null && errors === null) {
-            saveToken(token);
+            saveToken(token).then(() => {
+                navigation.navigate(Screens.stacks.main, { screen: Screens.map });
+            });
         }
     }, [token]);
 
