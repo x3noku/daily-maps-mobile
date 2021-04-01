@@ -105,6 +105,7 @@ const DirectChatScreen = ({ navigation, route }) => {
                         style={{ flexGrow: 1, maxWidth: inputWidth, height: inputHeight, fontSize: SIZE_TEXT_PRIMARY }}
                         placeholder='Type a message'
                         multiline
+                        value={messageBody}
                         onContentSizeChange={event => {
                             if (inputHeight === undefined) setInputHeight(event.nativeEvent.contentSize.height);
                             else if (event.nativeEvent.contentSize.height < SIZE_TEXT_PRIMARY * 7) {
@@ -124,6 +125,7 @@ const DirectChatScreen = ({ navigation, route }) => {
                             socketConnection.chatConnection.setOnSendMessageHandler(response => {
                                 console.log('SEND_MESSAGE', response);
                             })
+                            setMessageBody('')
                         }
                     }}/>
                 </View>

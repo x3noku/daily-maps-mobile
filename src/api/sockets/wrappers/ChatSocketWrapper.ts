@@ -74,11 +74,17 @@ export default class ChatSocketWrapper extends SocketWrapper {
     }
 
     linkHandlersWithSocket = () => {
-        this.socket.on(SocketEvents.chat.connect, res => this.onConnectHandler(res));
+        this.socket.on(SocketEvents.chat.connect, res => {
+            this.onConnectHandler(res)
+            console.log('connected to chat list')
+        });
         this.socket.on(SocketEvents.chat.createPrivateChat, res => this.onCreatePrivateChatHandler(res));
         this.socket.on(SocketEvents.chat.getChats, res => this.onGetChatsHandler(res));
         this.socket.on(SocketEvents.chat.sendMessage, res => this.onSendMessageHandler(res));
         this.socket.on(SocketEvents.chat.getChatMessages, res => this.onGetMessagesHandler(res));
-        this.socket.on(SocketEvents.chat.newMessage, res => this.onNewMessageHandler(res))
+        this.socket.on(SocketEvents.chat.newMessage, res => {
+            this.onNewMessageHandler(res)
+            console.log(res);
+        })
     };
 }
