@@ -35,20 +35,11 @@ const ChatScreen = ({ navigation }: { navigation: any }) => {
 
     useEffect(() => {
         if (socketConnection) {
-            // socketConnection.chatConnection.connect();
+            socketConnection.chatConnection.connect();
             socketConnection.chatConnection.setOnConnectHandler(() => {
                 console.log('CONNECT');
             });
             socketConnection.chatConnection.createPrivateChat({ users: ['x3noku', 'x2noku'] });
-            /*socketConnection.chatConnection.setOnCreatePrivateChatHandler(response =>
-                console.log('CREATE CHAT', response),
-            );*/
-            socketConnection.chatConnection.sendMessage({
-                chatId: '6062d3af11b7cc0013c98a8a',
-                body: 'Мое первое сообщние для хриноку',
-                type: MessageType.string,
-            });
-            socketConnection.chatConnection.setOnSendMessageHandler(response => console.log('SEND MESSAGE', response));
         }
     }, []);
 

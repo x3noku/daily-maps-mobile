@@ -1,18 +1,19 @@
-import React, { ReactElement, useEffect, useState } from 'react';
-import MapboxGL from '@react-native-mapbox-gl/maps';
-import MapboxDirectionsFactory from '@mapbox/mapbox-sdk/services/directions';
-import Config from 'react-native-config';
-import RNLocation, { Location } from 'react-native-location';
-import { feature as createFeature, Feature } from '@turf/helpers';
-import { View } from 'react-native';
-import Button, { ButtonType } from '../../components/atoms/Button';
-import { COLOR_BLUE_PRIMARY, COLOR_WHITE } from '../../styles/colors';
-import { Screens } from '../../utils/constants';
-import IconButton, { IconButtonType } from '../../components/atoms/IconButton';
-import { useSocketConnection } from '../../context/SocketSonnectionContext';
-import IList from '../../models/List';
-import { useIsFocused } from '@react-navigation/native';
-import { lineString } from '@turf/helpers';
+import React, { ReactElement, useEffect, useState } from "react";
+import MapboxGL from "@react-native-mapbox-gl/maps";
+import MapboxDirectionsFactory from "@mapbox/mapbox-sdk/services/directions";
+import Config from "react-native-config";
+import RNLocation, { Location } from "react-native-location";
+import { feature as createFeature, Feature, lineString } from "@turf/helpers";
+import { View } from "react-native";
+import Button, { ButtonType } from "../../components/atoms/Button";
+import { COLOR_BLUE_PRIMARY, COLOR_BLUE_SECONDARY, COLOR_GRAY, COLOR_WHITE } from "../../styles/colors";
+import { Screens } from "../../utils/constants";
+import IconButton, { IconButtonType } from "../../components/atoms/IconButton";
+import { useSocketConnection } from "../../context/SocketSonnectionContext";
+import IList from "../../models/List";
+import { useIsFocused } from "@react-navigation/native";
+import IEvent, { IEventPrivacyType } from "../../models/Event";
+import { LocationType } from "../../models/Location";
 
 MapboxGL.setAccessToken(Config.MAPBOX_ACCESS_TOKEN);
 RNLocation.configure({
@@ -31,7 +32,9 @@ const MapScreen = ({ navigation, route }: { navigation: any; route: any }) => {
     const [feature, setFeature] = useState<Feature | undefined>(undefined);
     const [list, setList] = useState<IList | undefined>();
     const [routeGeometry, setRouteGeometry] = useState({ coordinates: [], type: 'LineString' });
-    const [pointsCollection, setPointsCollection] = useState<Array<ReactElement>>();
+    const [routePoints, setRoutePoints] = useState<Array<ReactElement>>();
+    const [availableEvents, setAvailableEvents] = useState<Array<IEvent>>([]);
+    const [availableEventsElements, setAvailableEventsElements] = useState<Array<ReactElement>>([]);
 
     const socketConnection = useSocketConnection();
     const isFocused = useIsFocused();
@@ -42,6 +45,23 @@ const MapScreen = ({ navigation, route }: { navigation: any; route: any }) => {
 
     useEffect(() => {
         if (socketConnection && isFocused) {
+            /*socketConnection.eventsConnection.createEvent({
+                title: 'Митап в холле ОмГУПС',
+                description: 'Без маски не пропустят',
+                placeName: 'ОмГУПС',
+                date: {end: '2021-03-31T07:20:43Z', start: '2021-03-31T06:00:34Z'},
+                location: {coordinates: [73.384744, 54.969450], type: LocationType.point},
+            });
+            socketConnection.eventsConnection.setCreateEventHandler(response => {
+                console.log('CREATE EVENT', response);
+            });*/
+            socketConnection.eventsConnection.getEventsList();
+            socketConnection.eventsConnection.setOnGetEventsListHandler(response => {
+               if(response.success && response.response) {
+                   setAvailableEvents(response.response.events);
+               }
+            });
+            
             if (route && route.params) {
                 socketConnection.tasksConnection.getListById({ id: route.params.listId });
                 socketConnection.tasksConnection.setOnGetListByIdHandler(response => {
@@ -53,8 +73,17 @@ const MapScreen = ({ navigation, route }: { navigation: any; route: any }) => {
                 setList(undefined);
             }
         }
+        else if(!isFocused) {
+            setList(undefined);
+            setRouteGeometry({ coordinates: [], type: 'LineString' });
+            setRoutePoints([]);
+        }
     }, [isFocused]);
 
+    useEffect(() => {
+        showEvents();
+    }, [availableEvents]);
+    
     useEffect(() => {
         buildRoute();
     }, [list]);
@@ -133,22 +162,80 @@ const MapScreen = ({ navigation, route }: { navigation: any; route: any }) => {
             
             const points: Array<ReactElement> = [];
             waypoints.forEach((waypoint, index) => {
-                const point = (<MapboxGL.PointAnnotation
-                    key={'waypoint' + index}
-                    id={'waypoint' + index}
-                    coordinate={waypoint}
-                />);
+                const point = (
+                    <MapboxGL.ShapeSource key={'waypoint' + index} id={'circleSource' + index} shape={{"coordinates": waypoint, "type": "Point"}} tolerance={0.01}>
+                        <MapboxGL.CircleLayer id={'outerCircle' + index} style={{
+                            circleRadius: 16,
+                            circleColor: COLOR_BLUE_SECONDARY,
+                            circleOpacity: 0.15,
+                        }} />
+                        <MapboxGL.CircleLayer id={'InnerOuterCircle' + index} style={{
+                            circleRadius: 12,
+                            circleColor: COLOR_BLUE_SECONDARY,
+                            circleOpacity: 0.5,
+                        }} />
+                        <MapboxGL.CircleLayer id={'InnerCircle' + index} style={{
+                            circleRadius: 10,
+                            circleColor: COLOR_WHITE,
+                        }} />
+                        <MapboxGL.SymbolLayer id={'waypointText' + index} style={{
+                            textField: index + 1 + '',
+                            textSize: 12,
+                        }}/>
+                    </MapboxGL.ShapeSource>);
                 points.push(point);
             });
-            setPointsCollection(points);
+            setRoutePoints(points);
             buildRouteLeg(waypoints, 0);
         }
         else {
-            setPointsCollection([]);
+            setRoutePoints([]);
             setRouteGeometry({ coordinates: [], type: 'LineString' });
         }
     };
 
+    const showEvents = () => {
+        const elements: Array<ReactElement> = []
+        availableEvents.forEach((event, index) => {
+            const point = (
+                <MapboxGL.ShapeSource key={'event' + index} id={'eventCircle' + index} shape={{"coordinates": event.location.coordinates, "type": "Point"}} onPress={() => {
+                    console.log(event);
+                }} tolerance={0.01}>
+                    <MapboxGL.CircleLayer id={'outer__OuterEventCircle' + index} style={{
+                        circleRadius: 18,
+                        circleColor: COLOR_BLUE_SECONDARY,
+                        circleOpacity: 0.15,
+                    }} />
+                    <MapboxGL.CircleLayer id={'outerOuterOuterOuterOuterEventCircle' + index} style={{
+                        circleRadius: 16,
+                        circleColor: COLOR_BLUE_SECONDARY,
+                        circleOpacity: 0.15,
+                    }} />
+                    <MapboxGL.CircleLayer id={'outerOuterOuterEventCircle' + index} style={{
+                        circleRadius: 14,
+                        circleColor: COLOR_BLUE_SECONDARY,
+                        circleOpacity: 0.15,
+                    }} />
+                    <MapboxGL.CircleLayer id={'outerEventCircle' + index} style={{
+                        circleRadius: 12,
+                        circleColor: COLOR_BLUE_SECONDARY,
+                        circleOpacity: 0.15,
+                    }} />
+                    <MapboxGL.CircleLayer id={'InnerEventCircle' + index} style={{
+                        circleRadius: 10,
+                        circleColor: COLOR_WHITE,
+                        circleOpacity: 0.7,
+                    }} />
+                    <MapboxGL.SymbolLayer id={'eventText' + index} style={{
+                        textField: event.title.substr(0, 1),
+                        textSize: 13,
+                    }}/>
+                </MapboxGL.ShapeSource>);
+            elements.push(point);
+        });
+        setAvailableEventsElements(elements);
+    };
+    
     return (
         <View style={{ width: '100%', height: '100%' }}>
             <MapboxGL.MapView
@@ -164,11 +251,12 @@ const MapScreen = ({ navigation, route }: { navigation: any; route: any }) => {
                     animationDuration={800}
                 />
                 <MapboxGL.UserLocation />
-    
-    
-                {pointsCollection}
                 
-                <MapboxGL.ShapeSource id='routeSource' shape={routeGeometry}>
+                {availableEventsElements}
+                
+                {routePoints}
+                
+                <MapboxGL.ShapeSource id='routeSource' shape={routeGeometry} tolerance={0.01}>
                     <MapboxGL.LineLayer
                         id='routeFill'
                         style={{
@@ -238,39 +326,3 @@ const MapScreen = ({ navigation, route }: { navigation: any; route: any }) => {
 };
 
 export default MapScreen;
-
-const one_two = {
-    coordinates: [
-        [73.440927, 54.942743],
-        [73.440694, 54.942836],
-        [73.440814, 54.942935],
-        [73.444377, 54.941501],
-        [73.444575, 54.941667],
-    ],
-    type: 'LineString',
-};
-const two_three = {
-    coordinates: [
-        [73.444575, 54.941667],
-        [73.444377, 54.941501],
-        [73.442407, 54.942302],
-        [73.442552, 54.942424],
-    ],
-    type: 'LineString',
-};
-const three_four = {
-    coordinates: [
-        [73.442552, 54.942424],
-        [73.442407, 54.942302],
-        [73.444377, 54.941501],
-        [73.445439, 54.941978],
-        [73.445878, 54.941106],
-        [73.441851, 54.937669],
-        [73.434031, 54.934501],
-        [73.450417, 54.92197],
-        [73.44497, 54.918134],
-        [73.438448, 54.921034],
-        [73.437984, 54.920646],
-    ],
-    type: 'LineString',
-};

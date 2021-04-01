@@ -32,4 +32,11 @@ export const SocketEvents = {
         completeTask: 'task:complete',
         removeTask: 'task:delete',
     },
+    events: {
+        createEvent: 'event:create',
+        getEvent: 'event:get',
+        getEventsList: 'event:get:events',
+        removeUserFromEvent: 'event:remove:user',
+        addUser: 'event:add:user',
+    },
 };

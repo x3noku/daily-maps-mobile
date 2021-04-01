@@ -15,7 +15,6 @@ import { Picker } from '@react-native-picker/picker';
 import { COLOR_TEXT_SECONDARY } from '../../../styles/colors';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import Config from 'react-native-config';
-import { Feature } from '@turf/helpers';
 
 MapboxGL.setAccessToken(Config.MAPBOX_ACCESS_TOKEN);
 
@@ -48,6 +47,11 @@ const CreateTaskPrimaryScreen = ({ navigation, route }: { navigation: any; route
             socketConnection.tasksConnection.setOnGetListsHandler(response => {
                 if (response.success && response.response) {
                     setAvailableLists(response.response.lists);
+                    const pickers: Array<ReactElement> = [];
+                    response.response.lists.forEach((list: IList) => {
+                        pickers.push(<Picker.Item key={list.id} label={list.title} value={list.id} />);
+                    });
+                    setAvailableListsElements(pickers);
                 }
             });
         }
@@ -56,17 +60,6 @@ const CreateTaskPrimaryScreen = ({ navigation, route }: { navigation: any; route
         task.location.coordinates = route.params.feature.geometry.coordinates;
         setTask(task);
     }, []);
-
-    useEffect(() => {
-        setAvailableListsElements([]);
-
-        availableLists.forEach((list: IList) => {
-            setAvailableListsElements([
-                ...availableListsElements,
-                <Picker.Item key={list.id} label={list.title} value={list.id} />,
-            ]);
-        });
-    }, [availableLists]);
 
     return (
         <SafeAreaView style={{ width: '100%', height: '100%' }}>
@@ -169,13 +162,6 @@ const CreateTaskPrimaryScreen = ({ navigation, route }: { navigation: any; route
                 />
 
                 <Space type={SpaceType.Big} />
-
-                {/*<View
-                    style={{
-                        height: 320,
-                        backgroundColor: 'red',
-                    }}
-                />*/}
 
                 <MapboxGL.MapView
                     style={{ height: 320, width: '100%' }}
