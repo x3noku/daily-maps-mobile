@@ -1,4 +1,4 @@
-# Evently
+# Daily.Maps
 
 ## Installation
 To join the development of this project, you should have these dependencies:
